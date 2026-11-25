@@ -1,9 +1,11 @@
-# Cotações do Ibovespa
+# Ibovespa daily data
 
-A análise usa a série **diária** do índice Ibovespa exportada do Investing.com, com 2.729 registros entre **02/01/2015 e 30/12/2025**. O provedor condiciona a redistribuição das cotações à autorização por escrito. O CSV é um insumo local. [Histórico do Ibovespa e condições de uso](https://br.investing.com/indices/bovespa-historical-data).
+The study uses 2,729 daily observations from January 2, 2015 to December 30, 2025. Store a copy you are authorized to use at `data/ibovespa.csv`. Investing.com requires permission to redistribute its quotes, so the price history is a local input. [Provider’s historical data](https://www.investing.com/indices/bovespa-historical-data) · [Provider’s terms](https://www.investing.com/about-us/terms-and-conditions)
 
-1. Use uma cópia autorizada do histórico com frequência diária e o período indicado.
-2. Salve o arquivo como `data/ibovespa.csv`. Na entrega acadêmica ele se chamava `Dados Históricos - Ibovespa.csv`.
-3. Mantenha a codificação UTF-8, o separador de campos vírgula e os cabeçalhos em português. O notebook usa `Data` no formato `DD.MM.AAAA`, `Abertura` e `Último`.
+## English input format
 
-O arquivo original representa as cotações com ponto como separador de milhar. A leitura da entrega interpreta esses valores em **milhares de pontos**. Para reproduzir os níveis de erro absoluto e o cenário, mantenha essa convenção. O MAPE é expresso em porcentagem.
+Use a UTF-8, comma-separated file with the columns `date,open,close`. Dates use `YYYY-MM-DD` and the two numeric columns use a decimal point. Both levels are in **thousands of index points**. For example, an illustrative index level of 100,500 points is entered as `100.500`. Dates must be unique daily trading sessions. Other columns are ignored.
+
+## Original provider format
+
+The notebook also recognizes the headers `Data` (date), `Abertura` (open) and `Último` (close) used in the Brazilian export. Keep its `DD.MM.YYYY` dates and its original numeric representation. The academic study interpreted the provider’s thousands separator as a decimal point to express levels in thousands of index points. Absolute errors and scenario estimates use that unit. MAPE is reported as a percentage.

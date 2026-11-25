@@ -1,50 +1,30 @@
-# Tech Challenge 2 - Previsão da tendência do Ibovespa
+# Tech Challenge 2 · Forecasting the Ibovespa closing index
 
-Projeto da fase **Machine Learning and Time Series** da pós-graduação em Data Analytics da FIAP. O estudo usa 2.729 pregões, de 2 de janeiro de 2015 a 30 de dezembro de 2025, para comparar estratégias de previsão do fechamento do Ibovespa. [Abrir o notebook com os resultados](notebooks/ibovespa.ipynb).
+How much does a model improve on repeating the last known close? This time-series project studies 2,729 Ibovespa trading sessions from January 2, 2015 through December 30, 2025. [Analysis notebook](notebooks/ibovespa.ipynb) · [Download the illustrated report](reports/ibovespa-forecasting.html?raw=1)
 
-## Objetivo
+## Results
 
-Estimar o fechamento do índice e investigar quanto os modelos acrescentam a uma estratégia simples, como repetir o último valor observado. A análise explora tendência, autocorrelação, estacionariedade e diferenciação da série. A última etapa usa o XGBoost para ilustrar a direção entre fechamentos estimados.
+The three baselines started from the close on November 13, 2025 and forecast the same 30 trading sessions, from November 14 to December 30. Repeating the last close produced the lowest mean absolute percentage error (MAPE) among these three strategies.
 
-## Resultados
-
-Os três modelos de referência partiram do fechamento de 13 de novembro de 2025 e fizeram previsões para os mesmos 30 pregões, de 14 de novembro a 30 de dezembro. Repetir o último fechamento produziu o menor erro percentual absoluto médio (MAPE) entre essas três estratégias.
-
-| Estratégia | Como a previsão foi feita | MAPE |
+| Baseline | Forecast rule | MAPE |
 | --- | --- | ---: |
-| Naive | Repete o último fechamento do treino | 1,34% |
-| Seasonal Naive | Repete os cinco últimos fechamentos em ciclos | 1,76% |
-| Seasonal Window Average | Calcula a média das duas últimas semanas de cinco pregões, por posição | 3,06% |
+| Naive | Repeat the last observed close | 1.34% |
+| Seasonal naive | Repeat the last five trading closes in order | 1.76% |
+| Seasonal window average | Average the two most recent five-session cycles by position | 3.06% |
 
-O experimento também ajustou ARIMA, Prophet e XGBoost. O ARIMA usou a série completa para escolher as ordens do modelo. O Prophet recebeu as aberturas observadas no teste e comparou dias corridos aos pregões por posição. O XGBoost obteve **0,35% de MAPE no próprio treino** e usou características calculadas com dados do pregão seguinte. Esses detalhes impedem usar esse número como evidência de desempenho futuro. O cenário final abrange cinco dias de segunda a sexta, com a abertura mantida fixa.
+The notebook also fits ARIMA, Prophet and XGBoost. ARIMA uses the full history to select its orders. Prophet uses observed opening levels for the test period and compares calendar-day predictions with trading sessions by position. XGBoost’s **0.35% in-sample MAPE** includes next-session information in its features and uses the same rows for training and scoring. The five-weekday scenario illustrates how its estimates move when the opening level is held fixed.
 
-## Tecnologias utilizadas
+## Reproduce the study
 
-Python 3.12, JupyterLab, pandas e NumPy para leitura e preparação, Matplotlib e Seaborn para gráficos, statsmodels para os testes e o ARIMA, Prophet e XGBoost para os demais modelos e scikit-learn para as métricas.
+1. Place an authorized daily price export at `data/ibovespa.csv`. The data guide documents the English input format and the original provider format. [Data and units](data/README.md)
+2. Use Python 3.12 in an activated virtual environment and run the commands below from the repository root.
+3. In JupyterLab, choose **Run → Run All Cells**. This also recreates the price-history plots from the local input. The published report contains aggregate scores, diagnostics and the five-weekday scenario.
 
-## Estrutura do projeto
+```shell
+python -m pip install -r requirements.txt
+python -m jupyterlab notebooks/ibovespa.ipynb
+```
 
-| Arquivo | Conteúdo |
-| --- | --- |
-| [notebooks/ibovespa.ipynb](notebooks/ibovespa.ipynb) | Análise, modelos, métricas e cenário final |
-| [reports/relatorio-ibovespa.html](reports/relatorio-ibovespa.html) | Versão de leitura da análise. Baixe o arquivo e abra-o no navegador |
-| [data/README.md](data/README.md) | Fonte, intervalo e formato do arquivo de cotações |
-| [requirements.txt](requirements.txt) | Dependências para executar o notebook |
+The study uses pandas, NumPy, Matplotlib, Seaborn, statsmodels, Prophet, XGBoost and scikit-learn.
 
-## Execução local
-
-1. Use Python 3.12 e prepare o arquivo `data/ibovespa.csv` conforme as [instruções da base](data/README.md).
-2. Na raiz do repositório, crie e ative um ambiente virtual. No PowerShell, execute os comandos abaixo.
-
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   python -m pip install -r requirements.txt
-   python -m jupyterlab notebooks/ibovespa.ipynb
-   ```
-
-3. No JupyterLab, selecione o kernel do ambiente e execute as células em ordem. Os gráficos com a série de cotações são gerados a partir do seu CSV.
-
-## Autor
-
-Luiz Carvalho · Pós-graduação em Data Analytics, FIAP.
+Luiz Carvalho · FIAP postgraduate program in Data Analytics. [GitHub profile](https://github.com/latcj)
